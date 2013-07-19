@@ -7,9 +7,11 @@ require 'yaml'
 require 'json'
 require 'oauth2'
 require "cronmon/version"
+require "cronmon/errors"
 require 'cronmon/deep_merge' unless defined?(DeepMerge)
 require "cronmon/sysinfo"
 require "cronmon/options"
+require "cronmon/cron"
 require "cronmon/registration"
 
 

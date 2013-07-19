@@ -35,6 +35,12 @@ module Cronmon
   class Options < OpenStruct
     attr_accessor :defaults
 
+    def self.load
+      options = self.new
+      options.load!
+      options
+    end
+
     def files=(*files)
       if(!files.empty?)
         @files = [files].flatten.compact.uniq

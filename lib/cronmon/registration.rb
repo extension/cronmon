@@ -7,17 +7,22 @@ module Cronmon
   class Registration
 
     AUTH_CONFIG_FILE = '/etc/cronmon/auth.toml'
+
+    def self.register(secret,force=false)
+      registration = self.new(secret)
+      return registration.register(force)
+    end
   
-    def initialize(secret,site)
+    def initialize(secret)
       @uid = 'cronmon-registration'
       @secret = secret
-      @site = site
+      @options = Cronmon::Options.load
       sysinfo = Cronmon::Sysinfo.get
       @hostname = sysinfo.hostname
     end
 
     def register(force = false)
-      client = OAuth2::Client.new(@uid, @secret, {site: @site, raise_errors: false})
+      client = OAuth2::Client.new(@uid, @secret, {site: @options.posturi, raise_errors: false})
       if(token = client.client_credentials.get_token)
         data = {hostname: @hostname}
         if(force)
