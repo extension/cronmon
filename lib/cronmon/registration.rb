@@ -38,10 +38,14 @@ module Cronmon
             if(response_data['message'])
               response_data['message']
             end
+          elsif(response.status == 401)
+            'Unauthorized request- did you specify the correct registration key?'
           else
             response
           end
         end
+      else
+        'Unable to get an OAuth token - did you specify the correct registration key?'
       end
     end
 
