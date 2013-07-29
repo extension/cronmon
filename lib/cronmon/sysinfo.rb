@@ -3,25 +3,24 @@
 # === LICENSE:
 # see LICENSE file
 
-require 'ohai'
+require 'facter'
 
 module Cronmon
   class Sysinfo
-
-    attr_reader :data
 
     def self.get
       self.new
     end
 
     def initialize
-      system = Ohai::System.new
-      system.all_plugins
-      @data = system.data
     end
 
     def hostname
-      @data['hostname']
+      Facter.hostname
+    end
+
+    def data
+      Facter.to_hash
     end
 
   end
