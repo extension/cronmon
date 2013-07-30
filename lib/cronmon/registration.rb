@@ -16,7 +16,7 @@ module Cronmon
     def initialize(secret)
       @uid = 'cronmon-registration'
       @secret = secret
-      @options = Cronmon::Options.load
+      @options = Cronmon.settings
       sysinfo = Cronmon::Sysinfo.get
       @hostname = sysinfo.hostname
     end

@@ -6,16 +6,16 @@
 module Cronmon
   class Cron
 
-    attr_accessor :options
+    attr_accessor :results
 
     def initialize(label,command)
+      @options = Cronmon.settings
       @label = label
       @command = command
-      @options = Cronmon::Options.load
       if(@options.auth.blank?)
         raise Cronmon::ConfigurationError, 'Missing registration settings'
       end
-
+      @results = {}
     end
 
     def run

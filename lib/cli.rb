@@ -45,7 +45,7 @@ module Cronmon
     desc "showsettings", "Show settings"
     def showsettings
       require 'pp'
-      @options = Cronmon::Options.load
+      @options = Cronmon.settings
       pp @options.to_hash
     end
 

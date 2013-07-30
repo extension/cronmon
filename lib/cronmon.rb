@@ -16,17 +16,14 @@ require "cronmon/registration"
 
 
 module Cronmon
-  class Core
 
-    def self.settings
-      if(@settings.nil?)
-        @settings = Cronmon::Options.new
-        @settings.load!
-      end
-
-      @settings
+  def self.settings
+    if(@settings.nil?)
+      @settings = Cronmon::Options.new
+      @settings.load!
     end
-  end
 
+    @settings
+  end
 
 end
