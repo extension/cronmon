@@ -42,5 +42,12 @@ module Cronmon
       puts "#{result}"
     end
 
+    desc "showsettings", "Show settings"
+    def showsettings
+      require 'pp'
+      @options = Cronmon::Options.load
+      pp @options.to_hash
+    end
+
   end
 end
