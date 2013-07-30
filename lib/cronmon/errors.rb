@@ -10,4 +10,7 @@ module Cronmon
   class ConfigurationError < StandardError
   end
 
+  class DataError < StandardError
+  end
+
 end
