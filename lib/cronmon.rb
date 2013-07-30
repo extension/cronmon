@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 
-require 'yaml'
+require 'redcard/1.9'
 require 'json'
 require 'oauth2'
 require "cronmon/version"

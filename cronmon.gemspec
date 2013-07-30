@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Cronmon::VERSION
   spec.authors       = ["Jason Adam Young"]
   spec.email         = ["jayoung@extension.org"]
-  spec.description   = %q{Cronmon is a gem for internal cron management}
+  spec.description   = %q{Cronmon wraps cron processes and sends stdout/stderr to a logging server}
   spec.summary       = %q{Cronmon is a gem for internal cron management}
-  spec.homepage      = ""
+  spec.homepage      = "https://engineering.extension.org"
   spec.license       = "BSD"
 
   spec.files         = `git ls-files`.split($/)
@@ -24,6 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency('oauth2')
   spec.add_dependency('facter')
   spec.add_dependency('toml-rb')
+  spec.add_dependency('redcard')
   spec.add_dependency('highline')
   spec.add_development_dependency('pry')
 
