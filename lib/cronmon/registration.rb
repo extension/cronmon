@@ -6,7 +6,6 @@
 module Cronmon
   class Registration
 
-    AUTH_CONFIG_FILE = '/etc/cronmon/auth.toml'
 
     def self.register(secret,force=false)
       registration = self.new(secret)

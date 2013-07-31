@@ -49,7 +49,7 @@ module Cronmon
 
     def files
       if(@files.nil? or @files.empty?)
-        @files = ["#{File.join(File.dirname(__FILE__), "defaults.toml").to_s}","/etc/cronmon/auth.toml","/etc/cronmon/settings.toml"]
+        @files = ["#{File.join(File.dirname(__FILE__), "defaults.toml").to_s}",Cronmon::AUTH_CONFIG_FILE,Cronmon::TASKS_CONFIG_FILE,Cronmon::SETTINGS_CONFIG_FILE]
       end
       @files
     end

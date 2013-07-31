@@ -45,8 +45,32 @@ module Cronmon
     desc "showsettings", "Show settings"
     def showsettings
       require 'pp'
-      @options = Cronmon.settings
-      pp @options.to_hash
+       @program_options = Cronmon.settings
+      pp  @program_options.to_hash
+    end
+
+    desc "run_task", "Run a task"
+    method_option :label, :aliases => "-l", :desc => 'Task to execute', :required => true
+    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
+    def run_task
+      @program_options = Cronmon.settings
+      if( @program_options.tasks.nil?)
+        puts "Unable to any configured tasks. Please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
+        exit       
+      end
+      if(command =  @program_options.tasks.send(options[:label]))
+        cron = Cronmon::Cron.new(options[:label],command)
+        cron.run
+        cronlog = cron.log
+        if(cronlog.posted?)
+          puts "Cron output for the #{options[:label]} posted to #{ @program_options.posturi}" if(!options[:quiet])
+        else
+          # todo: post error if failcount reached
+          puts "Unable to post cron output, Reason: #{cronlog.error}" if(!options[:quiet])
+        end
+      else
+        puts "Unable to find a command for \"#{options[:label]}\" please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
+      end
     end
 
   end

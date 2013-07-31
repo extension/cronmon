@@ -13,25 +13,30 @@ module Cronmon
       @options = Cronmon.settings
       @label = label
       @command = command
-      if(@options.auth.blank?)
+      if(@options.auth.empty?)
         raise Cronmon::ConfigurationError, 'Missing registration settings'
       end
       @results = {}
     end
 
     def run
+      @results['label'] = @label
+      @results['command'] = @command
       @results['start'] = Time.now.utc
       stdin, stdout, stderr = Open3.popen3(@command)
       stdin.close
       @results['stdout'] = stdout.read
       @results['stderr'] = stderr.read
       @results['finish'] = Time.now.utc
-      @results['success'] = stderr.empty?
+      @results['success'] = @results['stderr'].empty?
+      @results['success']
     end
 
 
     def log
-
+      cronlog = Cronmon::CronLog.new(@label,@results)
+      cronlog.post
+      cronlog
     end
   end
 
