@@ -64,6 +64,20 @@ module Cronmon
         cronlog = cron.log
         if(cronlog.posted?)
           puts "Cron output for the #{options[:label]} posted to #{ @program_options.posturi}" if(!options[:quiet])
+          # go back and try to post previous logs if any exist.
+          loglist = Cronmon::CronLog.check_for_logs(options[:label])
+          if(!loglist.empty?)
+            loglist.each do |logfile|
+              if(old_cronlog = Cronmon::CronLog.post_logfile(logfile))
+                if(old_cronlog.posted?)
+                  puts "Old Cron output for the #{options[:label]} posted to #{ @program_options.posturi}" if(!options[:quiet])
+                else
+                  # todo: post error if failcount reached
+                  puts "Unable to post old cron output, Reason: #{old_cronlog.error}" if(!options[:quiet])
+                end
+              end
+            end
+          end
         else
           # todo: post error if failcount reached
           puts "Unable to post cron output, Reason: #{cronlog.error}" if(!options[:quiet])
