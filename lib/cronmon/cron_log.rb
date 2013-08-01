@@ -26,7 +26,7 @@ module Cronmon
         @logfile = File.join(Cronmon.settings.logsdir, "#{@label}_#{@logtime.to_i}.json")
         if(File.exists?(@logfile))
           logdata = JSON.parse(File.read(@logfile))
-          @metadata = logdata['metadata']
+          @metadata = logdata['metadata'] || {}
           @results = logdata['results']
         else
           raise Cronmon::DataError, "Unable to find the cron log: #{@logfile}"
@@ -96,6 +96,37 @@ module Cronmon
 
     def posted?
       @posted
+    end
+
+    def self.logfile_to_label_timestamp(logfile)
+      logpath = Pathname.new(logfile)
+      regexp = %r{(?<label>[[:alpha:]]+)_(?<timestamp>[[:digit:]]+)\.json}
+      if(matched = regexp.match(logpath.basename.to_s))
+        {'label' => matched[:label], 'timestamp' => matched[:timestamp].to_i}
+      else
+        nil
+      end
+    end
+
+    def self.check_for_logs(label)
+      @options = Cronmon.settings
+      Dir.glob(File.join(@options.logsdir,"#{label}_*.json")).sort
+    end
+
+    def self.post_unposted(label)
+      loglist = check_for_logs(label)
+      if(!loglist.empty?)
+        loglist.each do |logfile|
+          if( data = logfile_to_label_timestamp(logfile) )
+            begin 
+              cronlog = CronLog.new(data['label'],data['timestamp'])
+              cronlog.post
+            rescue Cronmon::DataError
+              # nothing
+            end
+          end
+        end
+      end
     end
 
 
