@@ -48,35 +48,45 @@ module Cronmon
 
     def post
       if(token = self.token)
-        response = token.post('cronmons/log', body: @results)
-        if(response)
-          if(response.status == 200)
-            if(File.exists?(@logfile))
-              # in the event we posted an existing logfile
-              File.unlink(@logfile)
-            end
-            @posted = true
-            return true
-          elsif(response.status == 422)
-            response_data = JSON.parse(response.body)
-            if(response_data['message'])
-              return post_failed(response_data['message'])
+        begin
+          response = token.post('cronmons/log', body: @results)
+          if(response)
+            if(response.status == 200)
+              if(File.exists?(@logfile))
+                # in the event we posted an existing logfile
+                File.unlink(@logfile)
+              end
+              @posted = true
+              return true
+            elsif(response.status == 422)
+              response_data = JSON.parse(response.body)
+              if(response_data['message'])
+                return post_failed(response_data['message'])
+              else
+                return post_failed(response.body)
+              end
+            elsif(response.status == 401)
+              return post_failed('Unauthorized request')
             else
               return post_failed(response.body)
             end
-          elsif(response.status == 401)
-            return post_failed('Unauthorized request')
-          else
-            return post_failed(response.body)
           end
+        rescue Faraday::Error::ConnectionFailed => e
+          return post_failed(e.message)
         end
-      end
+      else
+        return post_failed("Unable to get an OAuth Token from #{@options.posturi}")
+      end          
     end
 
     def token
       if(@token.nil?)
         client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {site: @options.posturi, raise_errors: false})
-        @token = client.client_credentials.get_token
+        begin
+          @token = client.client_credentials.get_token
+        rescue Faraday::Error::ConnectionFailed => e
+          return nil
+        end
       end
       @token
     end      
@@ -113,18 +123,23 @@ module Cronmon
       Dir.glob(File.join(@options.logsdir,"#{label}_*.json")).sort
     end
 
+    def self.post_logfile(logfile)
+      if( data = logfile_to_label_timestamp(logfile) )
+        begin 
+          cronlog = CronLog.new(data['label'],data['timestamp'])
+          cronlog.post
+          return cronlog
+        rescue Cronmon::DataError
+          return nil
+        end
+      end
+    end      
+
     def self.post_unposted(label)
       loglist = check_for_logs(label)
       if(!loglist.empty?)
         loglist.each do |logfile|
-          if( data = logfile_to_label_timestamp(logfile) )
-            begin 
-              cronlog = CronLog.new(data['label'],data['timestamp'])
-              cronlog.post
-            rescue Cronmon::DataError
-              # nothing
-            end
-          end
+          self.post_logfile(logfile)
         end
       end
     end
