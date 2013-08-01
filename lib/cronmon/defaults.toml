@@ -1,3 +1,2 @@
-posturi = "http://albatross.dev"
 logsdir = "/etc/cronmon/logs"
-#posturi = 'https://engineering.extension.org/'
+posturi = 'https://engineering.extension.org/'

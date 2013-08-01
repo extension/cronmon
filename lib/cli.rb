@@ -49,10 +49,10 @@ module Cronmon
       pp  @program_options.to_hash
     end
 
-    desc "run_task", "Run a task"
+    desc "task", "Run a task"
     method_option :label, :aliases => "-l", :desc => 'Task to execute', :required => true
     method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
-    def run_task
+    def task
       @program_options = Cronmon.settings
       if( @program_options.tasks.nil?)
         puts "Unable to any configured tasks. Please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
