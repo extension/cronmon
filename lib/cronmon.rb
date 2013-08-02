@@ -6,6 +6,7 @@
 require 'redcard/1.9'
 require 'json'
 require 'oauth2'
+require 'logger'
 require "cronmon/version"
 require "cronmon/errors"
 require 'cronmon/deep_merge' unless defined?(DeepMerge)
@@ -30,5 +31,17 @@ module Cronmon
 
     @settings
   end
+
+  def self.logger
+    options = self.settings
+    if(@logger.nil?)
+      if(!File.exists?(options.logsdir))
+        FileUtils.mkdir_p(options.logsdir)
+      end
+      @logger = Logger.new("#{options.logsdir}/cronmon.log")
+    end
+    @logger
+  end
+
 
 end

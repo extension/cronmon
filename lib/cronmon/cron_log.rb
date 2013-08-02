@@ -57,6 +57,7 @@ module Cronmon
                 File.unlink(@logfile)
               end
               @posted = true
+              Cronmon.logger.info("Posted #{@label} output to #{@options.posturi}")
               return true
             elsif(response.status == 422)
               response_data = JSON.parse(response.body)
@@ -97,6 +98,7 @@ module Cronmon
       @metadata['failcount'] ||= 0
       @metadata['failcount'] += 1
       self.dump
+      Cronmon.logger.error(message)
       return false
     end
 
