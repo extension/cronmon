@@ -6,10 +6,12 @@
 module Cronmon
   class Registration
 
+    attr_reader :hostname
 
     def self.register(secret,force=false)
       registration = self.new(secret)
-      return registration.register(force)
+      registration.register(force)
+      registration
     end
   
     def initialize(secret)
@@ -18,35 +20,69 @@ module Cronmon
       @options = Cronmon.settings
       sysinfo = Cronmon::Sysinfo.get
       @hostname = sysinfo.hostname
+      @success = false
     end
 
+    def token
+      if(@token.nil?)
+        client = OAuth2::Client.new(@uid, @secret, {site: @options.posturi, raise_errors: false})
+        begin
+          @token = client.client_credentials.get_token
+        rescue Faraday::Error::ConnectionFailed => e
+          return nil
+        end
+      end
+      @token
+    end       
+
     def register(force = false)
-      client = OAuth2::Client.new(@uid, @secret, {site: @options.posturi, raise_errors: false})
-      if(token = client.client_credentials.get_token)
+
+      if(token = self.token)
         data = {hostname: @hostname}
         if(force)
           data[:force] = true
         end
-        response = token.post('cronmons/register', body: data)
 
-        if(response)
-          if(response.status == 200)
-            return registration_success(response)
-          elsif(response.status == 422)
-            response_data = JSON.parse(response.body)
-            if(response_data['message'])
-              response_data['message']
+        begin
+          response = token.post('cronmons/register', body: data)
+          if(response)
+            if(response.status == 200)
+              return registration_success(response)
+            elsif(response.status == 422)
+              # possible this throws an exception if we don't get JSON, not catching for now
+              response_data = JSON.parse(response.body)
+              if(response_data['message'])
+                return registration_failed(response_data['message'])
+              else
+                return registration_failed("Received an Unprocessable Entity error, but no error message.")
+              end
+            elsif(response.status == 401)
+              return registration_failed('Unauthorized request – did you specify the correct registration key?')
+            else
+              return registration_failed("An unknown error occurred. Response code: #{response.status}")
             end
-          elsif(response.status == 401)
-            'Unauthorized request- did you specify the correct registration key?'
-          else
-            response
           end
+        rescue Faraday::Error::ConnectionFailed => e
+          return registration_failed(e.message)
         end
       else
-        'Unable to get an OAuth token - did you specify the correct registration key?'
+        return registration_failed("Unable to get an OAuth Token from #{@options.posturi}")
       end
     end
+
+    def error
+      @error
+    end
+
+    def success?
+      @success
+    end
+
+    def registration_failed(message)
+      @error = message
+      Cronmon.logger.error("REGISTRATION: #{message}")
+      return false
+    end      
 
     def registration_success(response)
       response_data = JSON.parse(response.body)
@@ -61,7 +97,9 @@ module Cronmon
           file.write(TOML.dump({:auth => response_data['auth']}))
         end
       end
-      'ok'
+      Cronmon.logger.info("REGISTRATION: Registered system as #{@hostname}")
+      @success = true
+      return true
     end      
 
 

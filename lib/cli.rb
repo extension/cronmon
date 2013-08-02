@@ -38,8 +38,12 @@ module Cronmon
         registration_key = options[:key]
       end
 
-      result = Cronmon::Registration.register(registration_key,options[:force])
-      puts "#{result}"
+      registration = Cronmon::Registration.register(registration_key,options[:force])
+      if(registration.success?)
+        puts "System registered as #{registration.hostname}"
+      else
+        puts "Unable to register. Reason: #{registration.error}"
+      end
     end
 
     desc "showsettings", "Show settings"

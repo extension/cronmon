@@ -52,24 +52,19 @@ module Cronmon
           response = token.post('cronmons/log', body: @results)
           if(response)
             if(response.status == 200)
-              if(File.exists?(@logfile))
-                # in the event we posted an existing logfile
-                File.unlink(@logfile)
-              end
-              @posted = true
-              Cronmon.logger.info("Posted #{@label} output to #{@options.posturi}")
-              return true
+              return post_success
             elsif(response.status == 422)
+              # possible this throws an exception if we don't get JSON, not catching for now
               response_data = JSON.parse(response.body)
               if(response_data['message'])
                 return post_failed(response_data['message'])
               else
-                return post_failed(response.body)
+                return post_failed("Received an Unprocessable Entity error, but no error message.")
               end
             elsif(response.status == 401)
               return post_failed('Unauthorized request')
             else
-              return post_failed(response.body)
+              return post_failed("An unknown error occurred. Response code: #{response.status}")
             end
           end
         rescue Faraday::Error::ConnectionFailed => e
@@ -92,13 +87,22 @@ module Cronmon
       @token
     end      
 
+    def post_success
+      if(File.exists?(@logfile))
+        # in the event we posted an existing logfile
+        File.unlink(@logfile)
+      end
+      @posted = true
+      Cronmon.logger.info("LOGGING: Posted #{@label} output to #{@options.posturi}")
+      return true
+    end      
 
     def post_failed(message)
       @metadata['error'] = message
       @metadata['failcount'] ||= 0
       @metadata['failcount'] += 1
       self.dump
-      Cronmon.logger.error(message)
+      Cronmon.logger.error("LOGGING: #{message}")
       return false
     end
 
