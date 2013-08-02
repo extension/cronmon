@@ -91,5 +91,20 @@ module Cronmon
       end
     end
 
+    desc "tasklist", "Show configured tasks"
+    def tasklist
+      @program_options = Cronmon.settings
+      if( @program_options.tasks.nil?)
+        puts "Unable to any configured tasks. Please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
+        exit       
+      end
+
+      puts "Configured tasks:"
+      @program_options.tasks.to_hash.each do |label,command|
+        puts " #{label} = #{command}"
+      end
+    end      
+
+
   end
 end
