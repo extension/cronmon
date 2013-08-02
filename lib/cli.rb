@@ -105,6 +105,18 @@ module Cronmon
       end
     end      
 
+    desc "heartbeat", "Post heartbeat information"
+    method_option :sysinfo, :default => true, :aliases => "-i", :desc => "Post sysinfo"
+    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"   
+    def heartbeat
+      heartbeat = Cronmon::Heartbeat.post(options[:sysinfo])
+      if(heartbeat.posted?)
+        puts "Heartbeat posted." if(!options[:quiet])
+      else
+        puts "Unable to post heartbeat. Reason: #{heartbeat.error}" if(!options[:quiet])
+      end
+    end
+
 
   end
 end

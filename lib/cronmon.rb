@@ -15,6 +15,7 @@ require "cronmon/options"
 require "cronmon/cron"
 require "cronmon/cron_log"
 require "cronmon/registration"
+require "cronmon/heartbeat"
 
 
 module Cronmon
