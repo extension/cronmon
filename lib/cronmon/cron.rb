@@ -28,6 +28,7 @@ module Cronmon
       @results['stdout'] = stdout.read
       @results['stderr'] = stderr.read
       @results['finish'] = Time.now.utc
+      @results['runtime'] = (@results['finish'] - @results['start'])
       @results['success'] = @results['stderr'].empty?
       @results['success']
     end
