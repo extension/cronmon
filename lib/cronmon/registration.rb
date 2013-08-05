@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # === COPYRIGHT:
 # Copyright (c) 2013 North Carolina State University
 # === LICENSE:
