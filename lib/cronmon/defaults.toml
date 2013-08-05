@@ -1,2 +1,2 @@
-logsdir = "/var/logs/cronmon"
+logsdir = "/var/log/cronmon"
 posturi = 'https://engineering.extension.org/'
