@@ -3,7 +3,7 @@
 # === LICENSE:
 # see LICENSE file
 
-require 'redcard/1.9'
+#require 'redcard/1.9'
 require 'json'
 require 'oauth2'
 require 'logger'
@@ -20,9 +20,9 @@ require "cronmon/heartbeat"
 
 module Cronmon
 
-  AUTH_CONFIG_FILE = '/etc/cronmon/auth.toml'
-  TASKS_CONFIG_FILE = '/etc/cronmon/tasks.toml'
-  SETTINGS_CONFIG_FILE = '/etc/cronmon/settings.toml'
+  AUTH_CONFIG_FILE = '/etc/cronmon/auth.yml'
+  TASKS_CONFIG_FILE = '/etc/cronmon/tasks.yml'
+  SETTINGS_CONFIG_FILE = '/etc/cronmon/settings.yml'
 
   def self.settings
     if(@settings.nil?)

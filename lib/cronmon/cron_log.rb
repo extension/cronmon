@@ -49,7 +49,7 @@ module Cronmon
     def post
       if(token = self.token)
         begin
-          response = token.post('cronmons/log', body: @results)
+          response = token.post('cronmons/log', :body => @results)
           if(response)
             if(response.status == 200)
               return post_success
@@ -77,7 +77,7 @@ module Cronmon
 
     def token
       if(@token.nil?)
-        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {site: @options.posturi, raise_errors: false})
+        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {:site => @options.posturi, :raise_errors => false})
         begin
           @token = client.client_credentials.get_token
         rescue Faraday::Error::ConnectionFailed => e
@@ -116,9 +116,9 @@ module Cronmon
 
     def self.logfile_to_label_timestamp(logfile)
       logpath = Pathname.new(logfile)
-      regexp = %r{(?<label>[[:alpha:]]+)_(?<timestamp>[[:digit:]]+)\.json}
+      regexp = %r{([[:alpha:]]+)_([[:digit:]]+)\.json}
       if(matched = regexp.match(logpath.basename.to_s))
-        {'label' => matched[:label], 'timestamp' => matched[:timestamp].to_i}
+        {'label' => matched[1], 'timestamp' => matched[2].to_i}
       else
         nil
       end

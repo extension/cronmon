@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # === COPYRIGHT:
 # Copyright (c) 2013 North Carolina State University
 # === LICENSE:
@@ -26,7 +25,7 @@ module Cronmon
 
     def token
       if(@token.nil?)
-        client = OAuth2::Client.new(@uid, @secret, {site: @options.posturi, raise_errors: false})
+        client = OAuth2::Client.new(@uid, @secret, {:site => @options.posturi, :raise_errors => false})
         begin
           @token = client.client_credentials.get_token
         rescue Faraday::Error::ConnectionFailed => e
@@ -39,13 +38,13 @@ module Cronmon
     def register(force = false)
 
       if(token = self.token)
-        data = {hostname: @hostname}
+        data = {:hostname => @hostname}
         if(force)
           data[:force] = true
         end
 
         begin
-          response = token.post('cronmons/register', body: data)
+          response = token.post('cronmons/register', :body => data)
           if(response)
             if(response.status == 200)
               return registration_success(response)
@@ -58,7 +57,7 @@ module Cronmon
                 return registration_failed("Received an Unprocessable Entity error, but no error message.")
               end
             elsif(response.status == 401)
-              return registration_failed('Unauthorized request – did you specify the correct registration key?')
+              return registration_failed('Unauthorized request - did you specify the correct registration key?')
             else
               return registration_failed("An unknown error occurred. Response code: #{response.status}")
             end
@@ -95,7 +94,7 @@ module Cronmon
         end
 
         File.open(AUTH_CONFIG_FILE,'w') do |file|
-          file.write(TOML.dump({:auth => response_data['auth']}))
+          file.write(YAML.dump({:auth => response_data['auth']}))
         end
       end
       Cronmon.logger.info("REGISTRATION: Registered system as #{@hostname}")

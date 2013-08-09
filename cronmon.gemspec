@@ -23,7 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency('thor', '>= 0.16.0')
   spec.add_dependency('oauth2')
   spec.add_dependency('facter')
-  spec.add_dependency('toml-rb')
   spec.add_dependency('redcard')
   spec.add_dependency('highline')
   spec.add_development_dependency('pry')

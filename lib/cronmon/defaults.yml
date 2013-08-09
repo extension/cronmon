@@ -1,0 +1,2 @@
+logsdir: "/var/log/cronmon"
+posturi: 'https://engineering.extension.org/'

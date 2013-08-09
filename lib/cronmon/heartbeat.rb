@@ -27,7 +27,7 @@ module Cronmon
 
       if(token = self.token)
         begin
-          response = token.post('cronmons/heartbeat', body: postdata)
+          response = token.post('cronmons/heartbeat', :body => postdata)
           if(response)
             if(response.status == 200)
               return post_success
@@ -55,7 +55,7 @@ module Cronmon
 
     def token
       if(@token.nil?)
-        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {site: @options.posturi, raise_errors: false})
+        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {:site => @options.posturi, :raise_errors => false})
         begin
           @token = client.client_credentials.get_token
         rescue Faraday::Error::ConnectionFailed => e
