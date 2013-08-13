@@ -77,9 +77,11 @@ module Cronmon
 
     def token
       if(@token.nil?)
-        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {:site => @options.posturi, :raise_errors => false})
+        client = OAuth2::Client.new(@options.auth.uid, @options.auth.secret, {:site => @options.posturi, :raise_errors => true})
         begin
           @token = client.client_credentials.get_token
+        rescue OAuth2::Error => e
+          return nil
         rescue Faraday::Error::ConnectionFailed => e
           return nil
         end
