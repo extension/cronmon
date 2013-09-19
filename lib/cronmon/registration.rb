@@ -18,8 +18,7 @@ module Cronmon
       @uid = 'cronmon-registration'
       @secret = secret
       @options = Cronmon.settings
-      sysinfo = Cronmon::Sysinfo.get
-      @hostname = sysinfo.hostname
+      @hostname = Socket::gethostname.split(/\./)[0]
       @success = false
     end
 

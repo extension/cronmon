@@ -6,24 +6,19 @@
 module Cronmon
   class Heartbeat
 
-    def self.post(post_sysinfo = true)
+    def self.post
       hb = self.new
-      hb.post(post_sysinfo)
+      hb.post
       hb
     end
 
     def initialize
       @posted = false
       @options = Cronmon.settings
-      @sysinfo = Cronmon::Sysinfo.get
     end
 
-    def post(post_sysinfo = true)
-      if(post_sysinfo)
-        postdata = {'sysinfo' => @sysinfo.data}
-      else
-        postdata = {'heartbeat' => true}
-      end
+    def post
+      postdata = {'heartbeat' => true}
 
       if(token = self.token)
         begin

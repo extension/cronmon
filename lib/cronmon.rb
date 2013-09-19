@@ -10,7 +10,6 @@ require 'logger'
 require "cronmon/version"
 require "cronmon/errors"
 require 'cronmon/deep_merge' unless defined?(DeepMerge)
-require "cronmon/sysinfo"
 require "cronmon/options"
 require "cronmon/cron"
 require "cronmon/cron_log"
