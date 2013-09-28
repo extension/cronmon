@@ -7,6 +7,7 @@
 require 'json'
 require 'oauth2'
 require 'logger'
+require 'socket'
 require "cronmon/version"
 require "cronmon/errors"
 require 'cronmon/deep_merge' unless defined?(DeepMerge)
