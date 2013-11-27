@@ -67,6 +67,8 @@ module Cronmon
               return post_failed("An unknown error occurred. Response code: #{response.status}")
             end
           end
+        rescue OAuth2::Error => e
+          return post_failed("OAuth2 Error: Message: #{e.message}")                  
         rescue Faraday::Error::ConnectionFailed => e
           return post_failed(e.message)
         end
