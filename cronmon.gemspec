@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Cronmon wraps cron processes and sends stdout/stderr to a logging server}
   spec.summary       = %q{Cronmon is a gem for internal cron management}
   spec.homepage      = "https://engineering.extension.org"
-  spec.license       = "BSD"
+  spec.license       = "eXtension"
 
   spec.files         = `git ls-files`.split($/)
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
