@@ -19,6 +19,9 @@ module Cronmon
 
     def post
       postdata = {'heartbeat' => true}
+      if(!@options.purpose.nil? and !@options.purpose.empty?)
+        postdata['purpose'] = @options.purpose
+      end
 
       if(token = self.token)
         begin
@@ -45,7 +48,7 @@ module Cronmon
         end
       else
         return post_failed("Unable to get an OAuth Token from #{@options.posturi}")
-      end          
+      end
     end
 
     def token
@@ -58,13 +61,13 @@ module Cronmon
         end
       end
       @token
-    end      
+    end
 
     def post_success
       @posted = true
       Cronmon.logger.info("HEARTBEAT: Sent to #{@options.posturi}")
       return true
-    end      
+    end
 
     def post_failed(message)
       @error = message
