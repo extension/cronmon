@@ -23,10 +23,17 @@ module Cronmon
       @results['label'] = @label
       @results['command'] = @command
       @results['start'] = Time.now.utc
-      stdin, stdout, stderr = Open3.popen3(@command)
-      stdin.close
-      @results['stdout'] = stdout.read
-      @results['stderr'] = stderr.read
+      # haltcheck
+      @haltfile = Cronmon.settings.maintenance_file
+      if(File.exists?(@haltfile))
+        @results['stdout'] = "Haltfile found: #{@haltfile}"
+        @results['stderr'] = "Haltfile found. Cronmon execution halted."
+      else
+        stdin, stdout, stderr = Open3.popen3(@command)
+        stdin.close
+        @results['stdout'] = stdout.read
+        @results['stderr'] = stderr.read
+      end
       @results['finish'] = Time.now.utc
       @results['runtime'] = (@results['finish'] - @results['start'])
       @results['success'] = @results['stderr'].empty?
@@ -42,5 +49,3 @@ module Cronmon
   end
 
 end
-
-
