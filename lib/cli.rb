@@ -10,12 +10,12 @@ module Cronmon
   class CLI < Thor
     include Thor::Actions
     include Cronmon
-  
+
 
     no_tasks do
 
       def ask_password(message)
-        HighLine.new.ask(message) do |q| 
+        HighLine.new.ask(message) do |q|
           q.echo = '*'
         end
       end
@@ -60,7 +60,7 @@ module Cronmon
       @program_options = Cronmon.settings
       if( @program_options.tasks.nil?)
         puts "Unable to any configured tasks. Please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
-        exit       
+        exit
       end
       if(command =  @program_options.tasks.send(options[:label]))
         cron = Cronmon::Cron.new(options[:label],command)
@@ -96,17 +96,17 @@ module Cronmon
       @program_options = Cronmon.settings
       if( @program_options.tasks.nil?)
         puts "Unable to any configured tasks. Please check the program settings (e.g. #{Cronmon::TASKS_CONFIG_FILE})"
-        exit       
+        exit
       end
 
       puts "Configured tasks:"
       @program_options.tasks.to_hash.each do |label,command|
         puts " #{label} = #{command}"
       end
-    end      
+    end
 
     desc "heartbeat", "Post heartbeat information"
-    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"   
+    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
     def heartbeat
       heartbeat = Cronmon::Heartbeat.post
       if(heartbeat.posted?)
