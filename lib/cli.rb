@@ -30,7 +30,7 @@ module Cronmon
 
     desc "register", "Register cronmon on this host"
     method_option :key, :default => 'prompt', :aliases => "-k", :desc => "Registration key"
-    method_option :force, :default => false, :aliases => "-f", :desc => "Force registration"
+    method_option :force => false, :aliases => "-f", :desc => "Force registration"
     def register
       if(options[:key] == 'prompt')
         registration_key = ask_password('Registration key: ')
@@ -55,7 +55,7 @@ module Cronmon
 
     desc "task", "Run a task"
     method_option :label, :aliases => "-l", :desc => 'Task to execute', :required => true
-    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
+    method_option :quiet => false, :aliases => "-q", :desc => "Don't show verbose output"
     def task
       @program_options = Cronmon.settings
       if( @program_options.tasks.nil?)
@@ -106,7 +106,7 @@ module Cronmon
     end
 
     desc "heartbeat", "Post heartbeat information"
-    method_option :quiet, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
+    method_option :quiet => false, :aliases => "-q", :desc => "Don't show verbose output"
     def heartbeat
       heartbeat = Cronmon::Heartbeat.post
       if(heartbeat.posted?)
