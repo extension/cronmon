@@ -33,6 +33,17 @@ module Cronmon
     @settings
   end
 
+  # convert environment settings to a environment hash suitable for popen3
+  def self.environment
+    if(!self.settings[:environment].blank?)
+      @environment = Hash.new
+      self.settings[:environment].to_hash.each do |keysym,value|
+        @environment[keysym.to_s.upcase] = value
+      end
+    end
+    @environment
+  end
+
   def self.logger
     options = self.settings
     if(@logger.nil?)

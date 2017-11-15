@@ -29,7 +29,11 @@ module Cronmon
         @results['stdout'] = "Haltfile found: #{@haltfile}"
         @results['stderr'] = "Haltfile found. Cronmon execution halted."
       else
-        stdin, stdout, stderr = Open3.popen3(@command)
+        if(Cronmon.environment.nil? or Cronmon.environment.empty?)
+          stdin, stdout, stderr = Open3.popen3(@command)
+        else
+          stdin, stdout, stderr = Open3.popen3(Cronmon.environment,@command)
+        end
         stdin.close
         @results['stdout'] = stdout.read
         @results['stderr'] = stderr.read
