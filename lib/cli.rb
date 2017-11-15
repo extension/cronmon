@@ -53,6 +53,13 @@ module Cronmon
       pp  @program_options.to_hash
     end
 
+    desc "showenvironment", "Show environment variables in settings"
+    def showenvironment
+      require 'pp'
+       @environment = Cronmon.environment
+      pp  @environment.to_hash
+    end
+
     desc "task", "Run a task"
     method_option :label, :aliases => "-l", :desc => 'Task to execute', :required => true
     method_option :quiet, :type => :boolean, :default => false, :aliases => "-q", :desc => "Don't show verbose output"

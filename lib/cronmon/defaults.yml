@@ -1,3 +1,5 @@
 logsdir: "/var/log/cronmon"
 posturi: 'https://engineering.extension.org/'
 maintenance_file: '/services/maintenance/CRONMONHALT'
+environment:
+  bundle_error_on_stderr: 'true'
