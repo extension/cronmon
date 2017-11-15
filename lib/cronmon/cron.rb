@@ -13,7 +13,7 @@ module Cronmon
       @options = Cronmon.settings
       @label = label
       @command = command
-      if(@options.auth.empty?)
+      if(@options.auth.nil? or @options.auth.empty?)
         raise Cronmon::ConfigurationError, 'Missing registration settings'
       end
       @results = {}
