@@ -21,7 +21,7 @@ module Cronmon
         @logtime = Time.now.utc
         @logfile = File.join(Cronmon.settings.logsdir, "#{@label}_#{@logtime.to_i}.json")
         @results = results_or_timestamp
-        @metadata = {'label' => @label}
+        @metadata = {'label' => @label, 'environment' => Cronmon.environment}
       elsif(results_or_timestamp.is_a?(Fixnum))
         @logtime = Time.at(results_or_timestamp).utc
         @logfile = File.join(Cronmon.settings.logsdir, "#{@label}_#{@logtime.to_i}.json")
