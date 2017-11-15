@@ -69,13 +69,13 @@ module Cronmon
             end
           end
         rescue OAuth2::Error => e
-          return post_failed("OAuth2 Error: Message: #{e.message}")                  
+          return post_failed("OAuth2 Error: Message: #{e.message}")
         rescue Faraday::Error::ConnectionFailed => e
           return post_failed(e.message)
         end
       else
         return post_failed("Unable to get an OAuth Token from #{@options.posturi}")
-      end          
+      end
     end
 
     def token
@@ -90,7 +90,7 @@ module Cronmon
         end
       end
       @token
-    end      
+    end
 
     def post_success
       if(File.exists?(@logfile))
@@ -100,7 +100,7 @@ module Cronmon
       @posted = true
       Cronmon.logger.info("LOGGING: Posted #{@label} output to #{@options.posturi}")
       return true
-    end      
+    end
 
     def post_failed(message)
       @metadata['error'] = message
@@ -136,7 +136,7 @@ module Cronmon
 
     def self.post_logfile(logfile)
       if( data = logfile_to_label_timestamp(logfile) )
-        begin 
+        begin
           cronlog = CronLog.new(data['label'],data['timestamp'])
           cronlog.post
           return cronlog
@@ -144,7 +144,7 @@ module Cronmon
           return nil
         end
       end
-    end      
+    end
 
     def self.post_unposted(label)
       loglist = check_for_logs(label)
