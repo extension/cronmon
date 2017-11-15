@@ -2,6 +2,7 @@
 # Copyright (c) 2013 North Carolina State University
 # === LICENSE:
 # see LICENSE file
+require 'fileutils'
 
 module Cronmon
   class CronLog
