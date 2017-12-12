@@ -1,4 +1,6 @@
 logsdir: "/var/log/cronmon"
+rebootcheck_file: '/var/run/reboot-required'
+rebootcheck_packages_file: '/var/run/reboot-required.pkgs'
 posturi: 'https://engineering.extension.org/'
 maintenance_file: '/services/maintenance/CRONMONHALT'
 environment:

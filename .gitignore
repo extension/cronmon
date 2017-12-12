@@ -18,3 +18,4 @@ tmp
 # testing settings
 cronmon_testing.yml
 testlogs/
+testdata/

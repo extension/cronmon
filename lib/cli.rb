@@ -123,6 +123,16 @@ module Cronmon
       end
     end
 
+    desc "rebootcheck", "Post rebootcheck information"
+    method_option :quiet,  :type => :boolean, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
+    def rebootcheck
+      rebootcheck = Cronmon::Rebootcheck.post
+      if(rebootcheck.posted?)
+        puts "Reboot check posted." if(!options[:quiet])
+      else
+        puts "Unable to post reboot check. Reason: #{rebootcheck.error}" if(!options[:quiet])
+      end
+    end
 
   end
 end
