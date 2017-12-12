@@ -112,12 +112,18 @@ module Cronmon
       end
     end
 
-    desc "heartbeat", "Post heartbeat information"
+    desc "heartbeat", "Post heartbeat and rebootcheck information"
     method_option :quiet,  :type => :boolean, :default => false, :aliases => "-q", :desc => "Don't show verbose output"
     def heartbeat
       heartbeat = Cronmon::Heartbeat.post
       if(heartbeat.posted?)
         puts "Heartbeat posted." if(!options[:quiet])
+        rebootcheck = Cronmon::Rebootcheck.post
+        if(rebootcheck.posted?)
+          puts "Reboot check posted." if(!options[:quiet])
+        else
+          puts "Unable to post reboot check. Reason: #{rebootcheck.error}" if(!options[:quiet])
+        end
       else
         puts "Unable to post heartbeat. Reason: #{heartbeat.error}" if(!options[:quiet])
       end
